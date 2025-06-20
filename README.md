@@ -5,7 +5,7 @@
 
 本插件用 Typescript 编写，请用下列代码部署：
 ```bash
-git clone -b dist --depth=1 --single-branch https://github.com/stdcall0/ba-plugin ./plugins/ba-plugin
+git clone -b dist --depth=1 --single-branch https://github.com/stdcall0/anon-plugin ./plugins/anon-plugin
 pnpm i
 ```
 

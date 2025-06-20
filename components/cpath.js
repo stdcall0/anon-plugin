@@ -1,9 +1,9 @@
 const cwd = process.cwd();
 const Path = {
     Process: cwd,
-    Config: `${cwd}/plugins/ba-plugin/config`,
-    Resource: `${cwd}/plugins/ba-plugin/resources`,
-    HTML: `${cwd}/plugins/ba-plugin/resources/html`,
-    Image: `${cwd}/plugins/ba-plugin/resources/img`
+    Config: `${cwd}/plugins/anon-plugin/config`,
+    Resource: `${cwd}/plugins/anon-plugin/resources`,
+    HTML: `${cwd}/plugins/anon-plugin/resources/html`,
+    Image: `${cwd}/plugins/anon-plugin/resources/img`
 };
 export default Path;

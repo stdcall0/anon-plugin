@@ -3,7 +3,7 @@ import { Path, Logger, Config } from '#gc';
 const apps = await (async () => {
     let ret = [];
     const files = fs
-        .readdirSync(`${Path.Process}/plugins/ba-plugin/apps`)
+        .readdirSync(`${Path.Process}/plugins/anon-plugin/apps`)
         .filter(file => file.endsWith('.js'));
     Config.load();
     files.forEach((file) => {
@@ -14,7 +14,7 @@ const apps = await (async () => {
     for (let i in files) {
         let name = files[i].replace('.js', '');
         if (ret[i].status != 'fulfilled') {
-            Logger.error(`[ba-plugin] Failed to load app ${name}`);
+            Logger.error(`[anon-plugin] Failed to load app ${name}`);
             Logger.error(ret[i].reason);
             continue;
         }
