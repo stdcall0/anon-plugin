@@ -1,0 +1,17 @@
+name: Build TypeScript
+on: 
+    push: 
+        branches:
+            - main
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps: 
+            - name: Checkout project
+              uses: actions/checkout@v3
+            - name: Build and push
+              uses: stdcall0/action-build-typescript@master
+              with:
+                pushToBranch: true
+                branch: 'dist'
+                githubToken: ${{ secrets.GITHUB_TOKEN }}
