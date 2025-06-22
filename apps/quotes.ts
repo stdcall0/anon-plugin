@@ -36,7 +36,7 @@ export class QuotesPlugin extends Plugin {
                     fnc: 'delete'
                 },
                 {
-                    reg: '^语录信息$',
+                    reg: '^信息$',
                     fnc: 'info'
                 }
             ]
