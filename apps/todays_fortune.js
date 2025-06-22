@@ -3,7 +3,7 @@ import { TodaysFortunePicker } from '#gc';
 export class AronaPlugin extends Plugin {
     constructor() {
         super({
-            name: 'BA今日运势',
+            name: '今日运势插件',
             dsc: '今日运势数据来自机器人 AL_1S',
             event: 'message',
             priority: '98',
