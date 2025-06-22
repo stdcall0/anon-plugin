@@ -9,6 +9,7 @@ export interface IYunzai {
     pickMember: (group_id: number, user_id: number) => GroupUser;
 }
 
+export type MessageResponse = { message: MessageSegment[] };
 export interface IBot {
     uin: number;
     nickname: string;
@@ -23,9 +24,9 @@ export interface IBot {
     getGroupMap: () => Promise<Map<number, Group>>;
 
     makeMsg: () => Promise<[MessageSegment[], any[]]>;
-    recallMsg: (message_id: string | string[]) => Promise<MessageSegment[]>;
-    getMsg: (message_id: string) => Promise<MessageSegment>;
-    getForwardMsg: (message_id: string) => Promise<MessageSegment[]>;
+    recallMsg: (message_id: string | string[]) => Promise<any[]>;
+    getMsg: (message_id: string) => Promise<MessageResponse>;
+    getForwardMsg: (message_id: string) => Promise<MessageResponse | MessageResponse[]>;
     makeForwardMsg: (msgs: ForwardMessage[]) => Promise<MessageSegment[]>;
 }
 
@@ -51,7 +52,7 @@ export interface MessageSegment {
     type: "text" | "image" | "record" | "video" | "reply" | "face" | "share" | "music" | "poke" | "gift" | "xml" | "json" | "cardimage" | "tts" | "raw" | "markdown" | "node" | "custom";
     data?: IDict;
     qq?: number;
-    file?: string;
+    url?: string;
     name?: string;
     id?: string; // Reply message_id
     text?: string; // Reply text or message text
@@ -73,19 +74,19 @@ export interface User {
     user_id: number;
 
     sendMsg: (msg: Message) => Promise<SendMessageResult>;
-    recallMsg: (message_id: string | string[]) => Promise<MessageSegment[]>;
+    recallMsg: (message_id: string | string[]) => Promise<any[]>;
     makeForwardMsg: (msgs: ForwardMessage[]) => Promise<MessageSegment[]>;
     getInfo: () => IDict; // User info
     getAvatarUrl: () => string;
 
-    getChatHistory: (message_seq: number, count: number, reversedOrder?: boolean) => Promise<MessageSegment[]>;
+    getChatHistory: (message_seq: number, count: number, reversedOrder?: boolean) => Promise<MessageResponse[]>;
 }
 
 export interface Group {
     group_id: number;
 
     sendMsg: (msg: Message) => Promise<SendMessageResult>;
-    recallMsg: (message_id: string | string[]) => Promise<MessageSegment[]>;
+    recallMsg: (message_id: string | string[]) => Promise<any[]>;
     makeForwardMsg: (msgs: ForwardMessage[]) => Promise<MessageSegment[]>;
     getInfo: () => IDict; // Group info
 
@@ -98,7 +99,7 @@ export interface Group {
     setAvatar: (file: string) => void;
     setAdmin: (user_id: number, enable: boolean) => void;
 
-    getChatHistory: (message_seq: number, count: number, reversedOrder?: boolean) => Promise<MessageSegment[]>;
+    getChatHistory: (message_seq: number, count: number, reversedOrder?: boolean) => Promise<MessageResponse[]>;
 }
 
 export interface GroupUser extends User {

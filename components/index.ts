@@ -5,10 +5,12 @@ import Logger from './import/logger.js';
 import Plugin from './import/plugin.js';
 import Render from './import/render.js';
 
-import Path from './cpath.js';
+import { Path, ensurePathExists } from './cpath.js';
 import Config from './config.js';
 
 import TodaysFortunePicker from './todays_fortune/picker.js';
+
+import * as Quotes from './quotes/index.js';
 
 export {
     PLUGIN_ID,
@@ -18,7 +20,10 @@ export {
     Render,
 
     Path,
+    ensurePathExists,
     Config,
 
-    TodaysFortunePicker
+    TodaysFortunePicker,
+
+    Quotes
 };

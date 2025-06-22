@@ -1,8 +1,10 @@
 import fs from 'node:fs'
 
-import { PLUGIN_ID, Path, Logger, Config } from '#gc';
+import { PLUGIN_ID, Path, Logger, Config, ensurePathExists } from '#gc';
 
 const apps = await (async () => {
+    await ensurePathExists();
+
     let ret = [];
     const files = fs
         .readdirSync(Path.App)

@@ -1,7 +1,7 @@
 // @ts-ignore
 import plugin from '../../../../lib/plugins/plugin.js';
 
-import type { User, Group, GroupUser, IBot, MessageSegment, SendMessageResult } from "./types.js";
+import type { User, Group, GroupUser, IBot, MessageSegment, SendMessageResult, MessageResponse } from "./types.js";
 interface Task {
     name: string;
     fnc?: any;
@@ -22,6 +22,7 @@ interface ReplyParam {
 
 interface E {
     message: MessageSegment[]; // Message segments array
+    message_id: string; // Message ID
     message_type?: "private" | "group"; // Message type
     notice_type?: "friend" | "group"; // Notice type
     isPrivate?: boolean;
@@ -36,15 +37,17 @@ interface E {
     friend?: User;
     group?: Group;
     member?: GroupUser;
+    user_id?: number; // User ID
+    group_id?: number; // Group ID
 
     bot: IBot;
 
     // NOTE: quote is not working for some reason
-    reply: (msg: string | string[], quote?: boolean, data?: ReplyParam) => Promise<SendMessageResult> | false;
-    recall?: () => Promise<MessageSegment[]>; // Recall message
+    reply: (msg: string | string[], quote?: boolean, data?: ReplyParam) => Promise<SendMessageResult>;
+    recall?: () => Promise<any[]>; // Recall message
 
     reply_id?: string; // Reply message ID
-    getReply?: () => Promise<MessageSegment[]>;
+    getReply?: () => Promise<MessageResponse>;
 }
 
 class PluginClass {
@@ -58,7 +61,7 @@ class PluginClass {
 
     constructor(t: any) {};
 
-    reply: (msg: string | string[], quote?: boolean, data?: ReplyParam) => Promise<SendMessageResult> | false;
+    reply: (msg: string | string[], quote?: boolean, data?: ReplyParam) => Promise<SendMessageResult>;
 
     // isGroup == true => any group member message will trigger the context
     // otherwise only the sender
