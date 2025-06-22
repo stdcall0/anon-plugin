@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import PLUGIN_ID from '#gc.id';
 import { Path, Logger, Config, ensurePathExists } from '#gc';
 const apps = await (async () => {
+    var _a;
     await ensurePathExists();
     let ret = [];
     const files = fs
@@ -9,18 +10,23 @@ const apps = await (async () => {
         .filter(file => file.endsWith('.js'));
     Config.load();
     files.forEach((file) => {
-        ret.push(import(`./apps/${file}`));
+        ret.push(import(`file://${Path.App}/${file}`));
     });
     ret = await Promise.allSettled(ret);
     let apps = {};
     for (let i in files) {
         let name = files[i].replace('.js', '');
-        if (ret[i].status != 'fulfilled') {
+        if (ret[i].status !== 'fulfilled') {
             Logger.error(`[${PLUGIN_ID}] Failed to load app ${name}`);
-            Logger.error(ret[i].reason);
+            Logger.error(((_a = ret[i].reason) === null || _a === void 0 ? void 0 : _a.stack) || ret[i].reason);
             continue;
         }
-        apps[name] = Object.values(ret[i].value)[0];
+        if (ret[i].value) {
+            apps[name] = ret[i].value.default || Object.values(ret[i].value)[0];
+        }
+        else {
+            Logger.warn(`[${PLUGIN_ID}] app [${name}] loaded but no export found.`);
+        }
     }
     return apps;
 })();

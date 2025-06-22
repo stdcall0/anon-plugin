@@ -137,7 +137,7 @@ export class QuotesPlugin extends Plugin {
         // Pick a random quote
         const quote = _.sample(quotes);
         try {
-            const result = await this.e.reply(segment.image(`file://${Quotes.ImageStorage.path(quote.filename)}`));
+            const result = await this.e.reply(segment.image(`file://${Quotes.ImageStorage.path(quote.filename).replace(/\\/g, '/')}`));
             let message_ids = [this.e.message_id];
             if (Array.isArray(result.message_id))
                 message_ids.push(...result.message_id);
