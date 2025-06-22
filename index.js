@@ -4,12 +4,14 @@ import { Path, Logger, Config, ensurePathExists } from '#gc';
 const apps = await (async () => {
     var _a;
     await ensurePathExists();
+    Logger.info(`[${PLUGIN_ID}] Loading apps...`);
     let ret = [];
     const files = fs
         .readdirSync(Path.App)
         .filter(file => file.endsWith('.js'));
     Config.load();
     files.forEach((file) => {
+        Logger.info(`[${PLUGIN_ID}] App: ${file} <- ${Path.App}/${file}`);
         ret.push(import(`file://${Path.App}/${file}`));
     });
     ret = await Promise.allSettled(ret);
