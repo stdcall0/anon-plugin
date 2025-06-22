@@ -45,7 +45,7 @@ export class QuotesPlugin extends Plugin {
         return s.slice(index + kw.length).split(' ').filter(tag => tag);
     }
     setId(message_ids, quote_id) {
-        message_ids.forEach(m => 
+        message_ids.forEach(async (m) => 
         // @ts-ignore
         await redis.set(`${PLUGIN_ID}:quotes:id:${m}`, quote_id.toString(), { EX: 3600 * 3 }));
     }
