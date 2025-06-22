@@ -1,13 +1,14 @@
-type Message = string[] | string;
 interface IDict {
     [key: string]: any;
 }
+
 export interface IYunzai {
     uin: number[];
     pickFriend: (user_id: number) => User;
     pickGroup: (group_id: number) => Group;
     pickMember: (group_id: number, user_id: number) => GroupUser;
 }
+
 export interface IBot {
     uin: number;
     nickname: string;
@@ -21,35 +22,8 @@ export interface IBot {
     getGroupList: () => Group[];
     getGroupMap: () => Map<number, Group>;
 }
-export interface User {
-    user_id: number;
-    card?: string; // Only for GroupMember
-    sendMsg: (msg: Message) => void;
-    recallMsg: (message_id: number) => void;
-    makeForwardMsg: (msg: Message) => Message;
-    getInfo: () => IDict; // User info
-    getAvatarUrl: () => string;
-}
-export interface Group {
-    group_id: number;
-    sendMsg: (msg: Message) => void;
-    recallMsg: (message_id: number) => void;
-    makeForwardMsg: (msg: Message) => Message;
-    getInfo: () => IDict; // Group info
-    getAvatarUrl: () => string;
-    getMemberList: () => GroupUser[];
-    getMemberMap: () => Map<number, GroupUser>;
-    pickMember: (user_id: number) => GroupUser;
-    pokeMember: (user_id: number) => void;
-    setName: (group_name: string) => void;
-    setAvatar: (file: string) => void;
-    setAdmin: (user_id: number, enable: boolean) => void;
-}
-export interface GroupUser extends User {
-    pickFriend: () => User;
-    poke: () => void;
-}
-export interface Segment {
+
+export interface ISegment {
     image: (file: string, type?: string, subType?: string) => string;
     at: (user_id: number, name: string) => string;
     record: (file: string) => string;
@@ -65,4 +39,61 @@ export interface Segment {
     cardimage: (file, minwidth, minheight, maxwidth, maxheight, source, icon) => string;
     tts: (text) => string;
     custom: (type, data) => string;
+}
+
+export interface MessageSegment {
+    type: "text" | "image" | "record" | "video" | "reply" | "face" | "share" | "music" | "poke" | "gift" | "xml" | "json" | "cardimage" | "tts" | "raw" | "markdown" | "node" | "custom";
+    data?: IDict;
+    qq?: number;
+    file?: string;
+    name?: string;
+    id?: string; // Reply message_id
+    text?: string; // Reply text or message text
+}
+export type Message = MessageSegment | string | (MessageSegment | string)[];
+
+export interface ForwardMessage {
+    message: Message;
+    nickname?: string;
+    user_id?: number;
+    time?: number; // Date.now() / 1000
+}
+export interface SendMessageResult {
+    message_id: string | string[]; // Message ID
+    data?: any[];
+}
+
+export interface User {
+    user_id: number;
+
+    sendMsg: (msg: Message) => Promise<SendMessageResult>;
+    recallMsg: (message_id: string | string[]) => Promise<MessageSegment[]>;
+    makeForwardMsg: (msgs: ForwardMessage[]) => Promise<MessageSegment[]>;
+    getInfo: () => IDict; // User info
+    getAvatarUrl: () => string;
+}
+
+export interface Group {
+    group_id: number;
+
+    sendMsg: (msg: Message) => Promise<SendMessageResult>;
+    recallMsg: (message_id: string | string[]) => Promise<MessageSegment[]>;
+    makeForwardMsg: (msgs: ForwardMessage[]) => Promise<MessageSegment[]>;
+    getInfo: () => IDict; // Group info
+
+    getAvatarUrl: () => string;
+    getMemberList: () => GroupUser[];
+    getMemberMap: () => Map<number, GroupUser>;
+    pickMember: (user_id: number) => GroupUser;
+    pokeMember: (user_id: number) => void;
+    setName: (group_name: string) => void;
+    setAvatar: (file: string) => void;
+    setAdmin: (user_id: number, enable: boolean) => void;
+}
+
+export interface GroupUser extends User {
+    card: string; // Group member card (nickname in group)
+
+    pickFriend: () => User;
+    poke: () => void;
 }

@@ -1,3 +1,5 @@
+const PLUGIN_ID = 'anon-plugin';
+
 import Common from './import/common.js';
 import Logger from './import/logger.js';
 import Plugin from './import/plugin.js';
@@ -9,6 +11,7 @@ import Config from './config.js';
 import TodaysFortunePicker from './todays_fortune/picker.js';
 
 export {
+    PLUGIN_ID,
     Common,
     Logger,
     Plugin,

@@ -3,14 +3,14 @@
  * It will break global definition.
  */
 
-type Segment = import("../import/types.ts").Segment;
+type ISegment = import("../import/types.ts").ISegment;
 type IYunzai = import("../import/types.ts").IYunzai;
 declare namespace NodeJS {
     export interface Global {
-        segment: Segment;
+        segment: ISegment;
         Bot: IYunzai;
     }
 }
 
-declare var segment: Segment;
+declare var segment: ISegment;
 declare var Bot: IYunzai;
