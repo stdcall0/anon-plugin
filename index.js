@@ -1,9 +1,9 @@
 import fs from 'node:fs';
-import { Path, Logger, Config } from '#gc';
+import { PLUGIN_ID, Path, Logger, Config } from '#gc';
 const apps = await (async () => {
     let ret = [];
     const files = fs
-        .readdirSync(`${Path.Process}/plugins/anon-plugin/apps`)
+        .readdirSync(Path.App)
         .filter(file => file.endsWith('.js'));
     Config.load();
     files.forEach((file) => {
@@ -14,7 +14,7 @@ const apps = await (async () => {
     for (let i in files) {
         let name = files[i].replace('.js', '');
         if (ret[i].status != 'fulfilled') {
-            Logger.error(`[anon-plugin] Failed to load app ${name}`);
+            Logger.error(`[${PLUGIN_ID}] Failed to load app ${name}`);
             Logger.error(ret[i].reason);
             continue;
         }
