@@ -18,7 +18,7 @@ const apps = await (async () => {
         let name = files[i].replace('.js', '');
         if (ret[i].status !== 'fulfilled') {
             Logger.error(`[${PLUGIN_ID}] Failed to load app ${name}`);
-            Logger.error(((_a = ret[i].reason) === null || _a === void 0 ? void 0 : _a.stack) || ret[i].reason);
+            console.error(((_a = ret[i].reason) === null || _a === void 0 ? void 0 : _a.stack) || ret[i].reason);
             continue;
         }
         if (ret[i].value) {
