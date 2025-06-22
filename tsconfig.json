@@ -14,6 +14,7 @@
       "paths": {
          "#@/*": ["./*"],
          "#gc": ["./components/index.js"],
+         "#gc.id": ["./components/plugin_id.js"],
          "#gc.res": ["./resources/index.js"],
          "#gc.models": ["./models/index.js"],
          "*": ["./node_modules/*", "./components/types/*"]

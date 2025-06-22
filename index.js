@@ -1,5 +1,6 @@
 import fs from 'node:fs';
-import { PLUGIN_ID, Path, Logger, Config, ensurePathExists } from '#gc';
+import PLUGIN_ID from '#gc.id';
+import { Path, Logger, Config, ensurePathExists } from '#gc';
 const apps = await (async () => {
     await ensurePathExists();
     let ret = [];

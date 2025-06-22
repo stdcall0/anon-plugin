@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import _ from 'lodash';
-import { PLUGIN_ID, Plugin, Logger, Config } from '#gc';
+import PLUGIN_ID from '#gc.id';
+import { Plugin, Logger, Config } from '#gc';
 import { Quotes } from '#gc';
 export class QuotesPlugin extends Plugin {
     constructor() {
