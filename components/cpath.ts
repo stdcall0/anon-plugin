@@ -1,7 +1,7 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 
-import { PLUGIN_ID } from '#gc';
+import PLUGIN_ID from '#gc.id';
 
 const cwd = process.cwd();
 
