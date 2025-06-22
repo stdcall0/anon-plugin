@@ -14,7 +14,7 @@ const apps = await (async () => {
     Config.load();
 
     files.forEach((file) => {
-        ret.push(import(`./apps/${file}`));
+        ret.push(import(`file://${Path.App}/${file}`));
     });
     
     ret = await Promise.allSettled(ret);
@@ -23,13 +23,17 @@ const apps = await (async () => {
     for (let i in files) {
         let name = files[i].replace('.js', '');
 
-        if (ret[i].status != 'fulfilled') {
+        if (ret[i].status !== 'fulfilled') {
             Logger.error(`[${PLUGIN_ID}] Failed to load app ${name}`);
-            Logger.error(ret[i].reason);
+            Logger.error(ret[i].reason?.stack || ret[i].reason);
             continue;
         }
 
-        apps[name] = Object.values(ret[i].value)[0];
+        if (ret[i].value) {
+            apps[name] = ret[i].value.default || Object.values(ret[i].value)[0];
+        } else {
+            Logger.warn(`[${PLUGIN_ID}] app [${name}] loaded but no export found.`);
+        }
     }
 
     return apps;
