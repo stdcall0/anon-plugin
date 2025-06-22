@@ -17,10 +17,16 @@ export interface IBot {
     pickFriend: (user_id: number) => User;
     pickGroup: (group_id: number) => Group;
     pickMember: (group_id: number, user_id: number) => GroupUser;
-    getFriendList: () => User[];
-    getFriendMap: () => Map<number, User>;
-    getGroupList: () => Group[];
-    getGroupMap: () => Map<number, Group>;
+    getFriendList: () => Promise<User[]>;
+    getFriendMap: () => Promise<Map<number, User>>;
+    getGroupList: () => Promise<Group[]>;
+    getGroupMap: () => Promise<Map<number, Group>>;
+
+    makeMsg: () => Promise<[MessageSegment[], any[]]>;
+    recallMsg: (message_id: string | string[]) => Promise<MessageSegment[]>;
+    getMsg: (message_id: string) => Promise<MessageSegment>;
+    getForwardMsg: (message_id: string) => Promise<MessageSegment[]>;
+    makeForwardMsg: (msgs: ForwardMessage[]) => Promise<MessageSegment[]>;
 }
 
 export interface ISegment {
@@ -71,6 +77,8 @@ export interface User {
     makeForwardMsg: (msgs: ForwardMessage[]) => Promise<MessageSegment[]>;
     getInfo: () => IDict; // User info
     getAvatarUrl: () => string;
+
+    getChatHistory: (message_seq: number, count: number, reversedOrder?: boolean) => Promise<MessageSegment[]>;
 }
 
 export interface Group {
@@ -89,6 +97,8 @@ export interface Group {
     setName: (group_name: string) => void;
     setAvatar: (file: string) => void;
     setAdmin: (user_id: number, enable: boolean) => void;
+
+    getChatHistory: (message_seq: number, count: number, reversedOrder?: boolean) => Promise<MessageSegment[]>;
 }
 
 export interface GroupUser extends User {
