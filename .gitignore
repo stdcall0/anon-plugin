@@ -23,5 +23,5 @@ package-lock.json
 
 # Config files (excluding default)
 config/*
-!config/config_default/
-!config/config_default/**
+!config/default_config/
+!config/default_config/**

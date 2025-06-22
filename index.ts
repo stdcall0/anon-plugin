@@ -5,6 +5,8 @@ import { Path, Logger, Config, ensurePathExists } from '#gc';
 
 const apps = await (async () => {
     await ensurePathExists();
+    
+    Logger.info(`[${PLUGIN_ID}] Loading apps...`);
 
     let ret = [];
     const files = fs
@@ -14,6 +16,7 @@ const apps = await (async () => {
     Config.load();
 
     files.forEach((file) => {
+        Logger.info(`[${PLUGIN_ID}] App: ${file} <- ${Path.App}/${file}`);
         ret.push(import(`file://${Path.App}/${file}`));
     });
     
