@@ -25,7 +25,7 @@ const apps = await (async () => {
 
         if (ret[i].status !== 'fulfilled') {
             Logger.error(`[${PLUGIN_ID}] Failed to load app ${name}`);
-            Logger.error(ret[i].reason?.stack || ret[i].reason);
+            console.error(ret[i].reason?.stack || ret[i].reason);
             continue;
         }
 
