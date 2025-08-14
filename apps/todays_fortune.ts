@@ -44,15 +44,12 @@ export class AronaPlugin extends Plugin {
             仅供娱乐|相信科学|请勿迷信
         */
 
-        const response = `您的今日运势为：
-${fortune.fortuneSummary}
+        const response = `${fortune.fortuneSummary}
 ${fortune.luckyStar}
 
 ${fortune.signText}
 
-${fortune.unsignText}
-
-仅供娱乐|相信科学|请勿迷信`;
+${fortune.unsignText}`;
 
         await this.e.reply(response, true);
     }
