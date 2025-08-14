@@ -3,7 +3,6 @@ import { JSONFile } from 'lowdb/node';
 
 import { Path } from '#gc';
 import { Quote } from '#gc.model';
-import { group } from 'node:console';
 
 interface DbSchema {
     quotes: Quote[];
@@ -48,9 +47,13 @@ export default class DbService {
         if (tags.length === 0) {
             return this.getAllQuotes(group_id);
         }
+        // TODO: This is a simple implementation, consider improving performance for large datasets
         return this.db.data.quotes.filter(quote =>
             quote.groupId === group_id && 
-            tags.every(tag => quote.tags.includes(tag))
+            tags.every(tag => {
+                const tagLower = tag.toLowerCase();
+                return quote.tags.some(qTag => qTag.toLowerCase().includes(tagLower));
+            })
         );
     }
 
