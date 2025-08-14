@@ -33,8 +33,12 @@ class DbService {
         if (tags.length === 0) {
             return this.getAllQuotes(group_id);
         }
+        // TODO: This is a simple implementation, consider improving performance for large datasets
         return this.db.data.quotes.filter(quote => quote.groupId === group_id &&
-            tags.every(tag => quote.tags.includes(tag)));
+            tags.every(tag => {
+                const tagLower = tag.toLowerCase();
+                return quote.tags.some(qTag => qTag.toLowerCase().includes(tagLower));
+            }));
     }
     getQuoteById(id) {
         return this.db.data.quotes.find(quote => quote.id === id);
