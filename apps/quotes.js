@@ -37,6 +37,8 @@ export class QuotesPlugin extends Plugin {
                 }
             ]
         });
+        this.recentQuoteIdsByGroup = {};
+        this.RECENT_CACHE_SIZE = 5;
     }
     getTags(s, kw) {
         const index = s.indexOf(kw);
@@ -130,12 +132,24 @@ export class QuotesPlugin extends Plugin {
         if (!this.e.isGroup || !this.e.group_id)
             return;
         const tags = this.getTags(this.e.msg, '语录');
-        const quotes = (await Quotes.DbService.getInstance()).findQuotesByTags(this.e.group_id, tags);
-        if (quotes.length === 0) {
+        const allQuotes = (await Quotes.DbService.getInstance()).findQuotesByTags(this.e.group_id, tags);
+        if (allQuotes.length === 0) {
             return this.e.reply('没有找到相关语录');
         }
+        const recentIds = this.recentQuoteIdsByGroup[this.e.group_id] || [];
+        let selectableQuotes = allQuotes.filter(q => !recentIds.includes(q.id));
+        // If all quotes are in the recent list, fall back to the full list.
+        if (selectableQuotes.length === 0) {
+            selectableQuotes = allQuotes;
+        }
         // Pick a random quote
-        const quote = _.sample(quotes);
+        const quote = _.sample(selectableQuotes);
+        // Update recent quotes cache
+        let newRecentIds = [quote.id, ...recentIds];
+        if (newRecentIds.length > this.RECENT_CACHE_SIZE) {
+            newRecentIds = newRecentIds.slice(0, this.RECENT_CACHE_SIZE);
+        }
+        this.recentQuoteIdsByGroup[this.e.group_id] = newRecentIds;
         try {
             const result = await this.e.reply(segment.image(`file://${Quotes.ImageStorage.path(quote.filename).replace(/\\/g, '/')}`));
             let message_ids = [this.e.message_id];
