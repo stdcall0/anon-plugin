@@ -16,7 +16,7 @@ export class QuotesPlugin extends Plugin {
                     fnc: 'upload'
                 },
                 {
-                    reg: '^语录.*$',
+                    reg: '^语录(?!信息).*$',
                     fnc: 'query'
                 },
                 {
@@ -32,7 +32,7 @@ export class QuotesPlugin extends Plugin {
                     fnc: 'delete'
                 },
                 {
-                    reg: '^信息$',
+                    reg: '^语录信息.*$',
                     fnc: 'info'
                 }
             ]
@@ -252,17 +252,24 @@ export class QuotesPlugin extends Plugin {
             return;
         if (!this.e.reply_id) {
             const db = await Quotes.DbService.getInstance();
-            const quotes = db.getAllQuotes(this.e.group_id);
+            const tags = this.getTags(this.e.msg, '语录信息');
+            let quotes;
+            if (tags.length > 0) {
+                quotes = db.findQuotesByTags(this.e.group_id, tags);
+            }
+            else {
+                quotes = db.getAllQuotes(this.e.group_id);
+            }
             if (quotes.length === 0) {
-                return this.e.reply('本群组当前没有语录');
+                return this.e.reply('找不到对应语录');
             }
             const quoteCount = quotes.length;
             const uploaderCount = _.uniq(quotes.map(q => q.uploaderId)).length;
-            const tags = _.uniq(_.flatten(quotes.map(q => q.tags))).join(' ');
-            return this.e.reply(`当前群组语录信息:\n` +
-                `总语录数: ${quoteCount}\n` +
+            const tags_flatten = _.uniq(_.flatten(quotes.map(q => q.tags))).join(' ');
+            return this.e.reply(`语录信息:\n` +
+                `语录数: ${quoteCount}\n` +
                 `上传者数: ${uploaderCount}\n` +
-                `标签: ${tags || '无'}`);
+                `标签: ${tags_flatten || '无'}`);
         }
         const quote_id = await this.getId(this.e.reply_id);
         if (!quote_id)
