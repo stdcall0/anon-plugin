@@ -1,2 +1,3 @@
 import ConfigFile from "./config_file.js";
-export { ConfigFile };
+import { isCopypastaRule } from "./copypasta_rule.js";
+export { ConfigFile, isCopypastaRule };
