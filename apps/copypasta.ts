@@ -48,8 +48,8 @@ function getRulesFromConfig(): CopypastaRule[] {
         const rules_raw = config.get("rules")?.toJSON();
         if (_.isArray(rules_raw)) {
             if (rules_raw.every(isCopypastaRule)) {
-                this.rules = rules_raw;
-                Logger.info(`[${PLUGIN_ID}][copypasta] loaded ${this.rules.length} rules.`);
+                rules = rules_raw;
+                Logger.info(`[${PLUGIN_ID}][copypasta] loaded ${rules.length} rules.`);
             } else {
                 const rules_invalid = rules_raw.filter((r: any) => !isCopypastaRule(r));
                 Logger.error(`[${PLUGIN_ID}][copypasta] invalid rule(s): ${rules_invalid}`);
