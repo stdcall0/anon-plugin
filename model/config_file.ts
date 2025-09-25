@@ -3,6 +3,7 @@ import fs from 'fs';
 import * as chokidar from 'chokidar';
 import YAML from 'yaml';
 
+import PLUGIN_ID from '#gc.id';
 import { Logger } from '#gc';
 
 export default class ConfigFile {
@@ -22,7 +23,7 @@ export default class ConfigFile {
 
         if (!this.watcher) {
             this.watcher = chokidar.watch(this.path).on('change', () => {
-                Logger.info("[ba_plugin] Reload config file: " + this.path);
+                Logger.info(`[${PLUGIN_ID}] Reload config file: ` + this.path);
                 this.init();
             });
         }
