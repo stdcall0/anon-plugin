@@ -4,9 +4,9 @@ import PLUGIN_ID from '#gc.id';
 import { Plugin, Logger, Config } from '#gc';
 import { CopypastaRule, isCopypastaRule } from '#gc.model';
 
-export class CopypastaPlugin extends Plugin {
-    rules: CopypastaRule[];
+let rules: CopypastaRule[] = null;
 
+export class CopypastaPlugin extends Plugin {
     constructor() {
         super({
             name: '复制粘贴插件',
@@ -15,27 +15,7 @@ export class CopypastaPlugin extends Plugin {
             priority: '98',
             rule: []
         });
-        this.loadRules();
-    }
-
-    loadRules() {
-        const config = Config.get("copypasta");
-        if (config.get("rules")) {
-            const rules_raw = config.get("rules");
-            if (_.isArray(rules_raw)) {
-                if (rules_raw.every(isCopypastaRule)) {
-                    this.rules = rules_raw;
-                    Logger.info(`[${PLUGIN_ID}][copypasta] loaded ${this.rules.length} rules.`);
-                } else {
-                    const rules_invalid = rules_raw.filter((r: any) => !isCopypastaRule(r));
-                    Logger.error(`[${PLUGIN_ID}][copypasta] invalid rule(s): ${rules_invalid}`);
-                }
-            } else {
-                Logger.error(`[${PLUGIN_ID}][copypasta] rules must be an array: ${rules_raw}`);
-            }
-        } else {
-            Logger.error(`[${PLUGIN_ID}][copypasta] no rules found in config!`);
-        }
+        if (!_.isArray(rules)) rules = getRulesFromConfig();
     }
 
     async accept() {
@@ -44,7 +24,7 @@ export class CopypastaPlugin extends Plugin {
         if (!msg) return;
 
         let msg_trim = msg.trim();
-        const rule = this.rules.find(r => {
+        const rule = rules.find(r => {
             if (r.trigger === msg_trim) {
                 if (!group) return r.enable_pm;
                 if (r.enabled_groups.length > 0 && !r.enabled_groups.includes(group)) return false;
@@ -59,4 +39,26 @@ export class CopypastaPlugin extends Plugin {
             await this.reply(rule.response);
         }
     }
+}
+
+function getRulesFromConfig(): CopypastaRule[] {
+    let rules: CopypastaRule[] = [];
+    const config = Config.get("copypasta");
+    if (config.get("rules")) {
+        const rules_raw = config.get("rules")?.toJSON();
+        if (_.isArray(rules_raw)) {
+            if (rules_raw.every(isCopypastaRule)) {
+                this.rules = rules_raw;
+                Logger.info(`[${PLUGIN_ID}][copypasta] loaded ${this.rules.length} rules.`);
+            } else {
+                const rules_invalid = rules_raw.filter((r: any) => !isCopypastaRule(r));
+                Logger.error(`[${PLUGIN_ID}][copypasta] invalid rule(s): ${rules_invalid}`);
+            }
+        } else {
+            Logger.error(`[${PLUGIN_ID}][copypasta] rules must be an array: ${rules_raw}`);
+        }
+    } else {
+        Logger.error(`[${PLUGIN_ID}][copypasta] no rules found in config!`);
+    }
+    return rules;
 }

@@ -33,10 +33,10 @@ export default class ConfigFile {
         return this.document.toJSON();
     }
 
-    has(key: string) {
+    has(key: string): boolean {
         return this.document.hasIn(key.split('.'));
     }
-    get(key: string) {
+    get(key: string): any {
         return this.document.getIn(key.split('.'));
     }
     set(key: string, value: any) {
